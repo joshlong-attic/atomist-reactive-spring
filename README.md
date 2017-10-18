@@ -41,15 +41,16 @@ We    use the new  service (which Spring injects as a constructor argument and t
 @Configuration
 class WebConfiguration(val ms: MovieService) {
 
+   
     @Bean
     fun routes() = router {
-
-        GET("/movies", { ok().body(ms.all(), Movie::class.java) })
-
-        GET("/movies/{id}", { ok().body(ms.byId(it.pathVariable("id")), Movie::class.java) })
-
-        GET("/movies/{id}/events", { ok().contentType(MediaType.TEXT_EVENT_STREAM)
-                .body(ms.events(it.pathVariable("id")), MovieEvent::class.java) })
+        GET("/movies") { ok().body<Movie>(ms.all()) }
+        
+        GET("/movies/{id}") { ok().body<Movie>(ms.byId(it.pathVariable("id"))) }
+        
+        GET("/movies/{id}/events") {
+            ok().contentType(MediaType.TEXT_EVENT_STREAM).body<MovieEvent>(ms.events(it.pathVariable("id")))
+        }
     }
 }
 ```
