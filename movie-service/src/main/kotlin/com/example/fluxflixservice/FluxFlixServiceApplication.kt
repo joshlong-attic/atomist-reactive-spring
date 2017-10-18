@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.MapUserDetailsRepository
 import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.server.ServerResponse.ok
+import org.springframework.web.reactive.function.server.body
 import org.springframework.web.reactive.function.server.router
 import reactor.core.publisher.Flux
 import reactor.core.publisher.SynchronousSink
@@ -72,12 +73,11 @@ class WebConfiguration(val ms: MovieService) {
 
     @Bean
     fun routes() = router {
-        GET("/movies", { ok().body(ms.all(), Movie::class.java) })
-        GET("/movies/{id}", { ok().body(ms.byId(it.pathVariable("id")), Movie::class.java) })
-        GET("/movies/{id}/events", {
-            ok().contentType(MediaType.TEXT_EVENT_STREAM)
-                    .body(ms.events(it.pathVariable("id")), MovieEvent::class.java)
-        })
+        GET("/movies") { ok().body<Movie>(ms.all()) }
+        GET("/movies/{id}") { ok().body<Movie>(ms.byId(it.pathVariable("id"))) }
+        GET("/movies/{id}/events") {
+            ok().contentType(MediaType.TEXT_EVENT_STREAM).body<MovieEvent>(ms.events(it.pathVariable("id")))
+        }
     }
 }
 
