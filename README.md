@@ -54,11 +54,9 @@ class WebConfiguration(val ms: MovieService) {
 }
 ```
 
-This wouldn't be much more than a toy if we didn't address security. We use Spring Security 5.0 to add in HTTP Basic authentication and authorization for two users, `springrod` and `starbuxman`. Naturally, only `springrod` has `ADMIN` authority on this system! :)
+This wouldn't be much more than a toy if we didn't address security. We use Spring Security 5.0 to add in HTTP Basic authentication and authorization for two users, `springrod` and `starbuxman`. Naturally, only `springrod` has `ADMIN` authority on this system! :) Try running the application and making a `curl` call to the `/movies` endpoint with `springrod`'s credentials: `curl -uspringrod:pw http://localhost:8080/movies`
 
 ```
-
-
 @Configuration
 @EnableWebFluxSecurity
 class SecurityConfiguration {
@@ -79,3 +77,5 @@ class SecurityConfiguration {
                     .build()
 }
 ```
+
+If we're to have any hope of deploying this code into production, we'll want to support observability, too. The Spring Boot Actuator surfaces information about the service as HTTP endpoints rooted at `/application`. These endpoints include its `/health`, its HTTP `/mappings`, and many more. In order to enable the HTTP endpoints, we have to opt-in with a simple property in the `src/main/resources/application.properties` file: `endpoints.default.web.enabled=true`.
