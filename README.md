@@ -66,6 +66,7 @@ class SecurityConfiguration {
     fun authentication() =
             MapUserDetailsRepository(
               User.withUsername("springrod").password("pw").roles("ADMIN", "USER").build(),
+              User.withUsername("rob_winch").password("pw").roles("ADMIN", "USER").build(),
               User.withUsername("starbuxman").password("pw").roles("USER").build())
 
     @Bean
